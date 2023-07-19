@@ -19,13 +19,3 @@ def furthest_planets(state):
                 srcplanet = src
                 dest_planet = dest
     return(src,dest)
-def find_weakest_enemy(state):
-    enemy_weakest_planet = state.enemy_planets()[0]
-    for planet in state.enemy_planets():
-        if(enemy_weakest_planet.num_ships >= planet.num_ships):
-            enemy_weakest_planet = planet
-    return enemy_weakest_planet
-    
-def be_attacked(state):
-    return any(enemy_fleet for enemy_fleet in state.enemy_fleets() \
-               if state.planets[enemy_fleet.destination_planet] in state.my_planets())
