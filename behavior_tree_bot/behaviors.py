@@ -86,7 +86,7 @@ def spread_atk(state):
 
     except StopIteration:
         return False
-def spread_and_attack_planets(state):  # performs as many spread and attacks as possible using all my planets as long as required ships is met
+def spread_attack(state):  # performs as many spread and attacks as possible using all my planets as long as required ships is met
     my_planets = iter(
         sorted(state.my_planets(), key=lambda planet: planet.num_ships))  # sort my planets based on num of ships
 
