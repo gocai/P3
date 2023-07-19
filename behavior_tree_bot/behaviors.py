@@ -59,7 +59,7 @@ def atk_close(state):
             distance = tDist
 
     return issue_order(state, closest.ID, wk_planet.ID, wk_ships + 3)
-
+#adapted and inspired from spread_bot
 def spread_atk(state):
     my_planets = iter(sorted(state.my_planets(), key = lambda p: p.num_ships))
     options = [planet for planet in state.not_my_planets() 
@@ -69,7 +69,7 @@ def spread_atk(state):
     select = iter(options)
     try:
         planet_iter = next(my_planets)
-        option_iter = next(options)
+        option_iter = next(select)
         while True:
             tShips = option_iter.num_ships + 1
 
@@ -80,43 +80,11 @@ def spread_atk(state):
             if planet_iter.num_ships > tShips:
                 issue_order(state, planet_iter.ID, option_iter.ID, tShips)
                 planet_iter = next(my_planets)
-                option_iter = next(options)
+                option_iter = next(select)
             else:
                 planet_iter = next(my_planets)
 
     except StopIteration:
         return False
-def spread_attack(state):  # performs as many spread and attacks as possible using all my planets as long as required ships is met
-    my_planets = iter(
-        sorted(state.my_planets(), key=lambda planet: planet.num_ships))  # sort my planets based on num of ships
 
-    possible_planets = [planet for planet in state.not_my_planets()
-                        if not any(fleet.destination_planet == planet.ID for fleet in
-                                   state.my_fleets())]  # make a list of planets that I can spread into or attack
-    possible_planets.sort(key=lambda
-        planet: planet.num_ships)  # sort the possible planets for my planets to spread or attack in ascending order
-
-    target_planets = iter(possible_planets)  # to start iteration of target planets from possible planets
-
-    try:
-        my_planet = next(my_planets)  # initiator of to get the items of my_planets
-        target_planet = next(target_planets)  # initiator of to get the items of target_planets
-        while True:
-            required_ships = target_planet.num_ships + 1  # calculate the required ships to make the target_planet (assuming its neutral) into my-planet
-
-            if target_planet in state.enemy_planets():
-                required_ships = target_planet.num_ships + \
-                                 state.distance(my_planet.ID,
-                                                target_planet.ID) * target_planet.growth_rate + 1  # calculate the required ships to make the target_planet (assuming its enemy) into my-planet
-
-            # check to whether attack or move to my next planet
-            if my_planet.num_ships > required_ships:  # check if my current planet has enough ships
-                issue_order(state, my_planet.ID, target_planet.ID,
-                                   required_ships)  # issue order if can make the target planet my planet
-                my_planet = next(my_planets)  # get next item of my_planet list
-                target_planet = next(target_planets)  # get next item of target_planet list
-            else:
-                my_planet = next(my_planets)  # get next item of my_planet list
-
-    except StopIteration:  # ran out of my_planets or target_planets
-        return False
+    

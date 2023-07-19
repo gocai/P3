@@ -33,16 +33,21 @@ def setup_behavior_tree():
 
     spread_sequence = Sequence(name='Spread Strategy')
     neutral_planet_check = Check(if_neutral_planet_available)
-    spread_action = Action(spread_attack)
+    spread_action = Action(spread_to_weakest_neutral_planet)
     spread_sequence.child_nodes = [neutral_planet_check, spread_action]
 
     #added stuff
     closest_plan = Sequence(name = 'Proximity Strategy')
-    #target_check = Check(if_enemy_planet_available)
+    target_check = Check(if_enemy_planet_available)
     closest_action = Action(atk_close)
-    #closest_plan.child_nodes = [target_check, closest_action]
+    closest_plan.child_nodes = [target_check, closest_action]
 
-    root.child_nodes = [offensive_plan, spread_sequence, attack.copy()]
+    spread_attack = Sequence(name='Spread Attack Strategy') # added: spread and atatck with all my planets
+    possible_planet_check = Check(if_neutral_planet_available) or Check(if_enemy_planet_available)# added: check if there is any neutral or enemy planet left
+    spread_attack_action = Action(spread_atk) # added: issue the order to spread/attack the planet
+    spread_attack.child_nodes = [possible_planet_check, spread_attack_action] # added: spread/attack
+
+    root.child_nodes = [spread_attack, attack.copy()]
 
     logging.info('\n' + root.tree_to_string())
     return root

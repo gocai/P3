@@ -1,0 +1,5 @@
+Selector: High Level Ordering of Strategies
+| Sequence: Spread Attack Strategy
+| | Check: if_neutral_planet_available
+| | Action: spread_atk
+| Action: attack_weakest_enemy_planet
